@@ -22,7 +22,7 @@ public class AccountRepository {
        return accountList;
     }
 
-    public Account findById(UUID id) {
+    public Account findById(UUID id) {// responsibility of this method finds the id if exist in database otherwise throw an exception
        //write a method that find an id inside the list if not throw RecordNotFountException
             return accountList.stream().filter(account -> account.getId().equals(id)).findFirst()
                     .orElseThrow(() ->new RecordNotFoundException("Account does not have in the databasse"));
