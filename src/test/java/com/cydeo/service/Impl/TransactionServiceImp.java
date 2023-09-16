@@ -7,6 +7,7 @@ import com.cydeo.exceptions.BalanceNotSufficientException;
 import com.cydeo.model.Account;
 import com.cydeo.model.Transaction;
 import com.cydeo.repository.AccountRepository;
+import com.cydeo.repository.TransactionRepository;
 import com.cydeo.service.TransactionService;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +20,10 @@ import java.util.UUID;
 public class TransactionServiceImp implements TransactionService {
     private final AccountRepository accountRepository; // use a habit for new dependency injection always be private final
 
-    public TransactionServiceImp(AccountRepository accountRepository) {
+    private final TransactionRepository transactionRepository;
+    public TransactionServiceImp(AccountRepository accountRepository, TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @Override
@@ -33,11 +36,19 @@ public class TransactionServiceImp implements TransactionService {
             -if both accounts are checking, if not, one of them saving, it needs to be same userId
         */
 
-        validateAccount(sender,receiver);
+        validateAccount(amount, sender,receiver);
+
+        // after validation is done and money is transferred to the receiver account
+        // we need to create the transaction object and save and return to database
+
+        Transaction transaction = Transaction.builder().amount(amount).sender(sender.getId())
+                .receiver(receiver.getId()).createDate(creationDate).message(message).build();
 
 
-        return null;
+        // save and return the transaction
+        return transactionRepository.save(transaction);
     }
+
 
     private void validateAccount(BigDecimal amount,Account sender, Account receiver){
 
@@ -64,6 +75,8 @@ public class TransactionServiceImp implements TransactionService {
         checkAccountOwnership(sender,receiver);
 
         executeBalanceAndUpdateIfRequired(amount, sender, receiver);
+
+
 
     }
 
