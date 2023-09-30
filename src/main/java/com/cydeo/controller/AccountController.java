@@ -40,6 +40,10 @@ public class AccountController {
 
     @PostMapping("/create")
     public String postAccountInfo(@ModelAttribute("account")Account account, Model model){
+        // create a method to capture information from ui
+        // print out account information
+        // create new Account method populating information using the data captured from ui
+        // return index page
         accountService.createAccount(account.getBalance(),new Date(),account.getAccountType(),account.getUserId());
         System.out.println(account);
 
