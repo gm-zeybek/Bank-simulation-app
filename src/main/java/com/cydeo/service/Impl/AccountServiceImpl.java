@@ -22,7 +22,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account createAccount(BigDecimal balance, Date createDate, AccountType accountType, Long userId) {
         // we need to create an object
-        Account account = Account.builder().id(UUID.randomUUID()).balance(balance).creationDate(createDate).accountType(accountType).userId(userId).accountStatus(AccountStatus.ACTIVE).build();
+        Account account = Account.builder().id(UUID.randomUUID()).balance(balance).creationDate(createDate)
+                .accountType(accountType).userId(userId)
+                .accountStatus(AccountStatus.ACTIVE).build();// accountStatus is active as default when created
         // saving and returning that account
         return accountRepository.saveAccount(account);
     }
