@@ -4,6 +4,7 @@ import com.cydeo.enums.AccountStatus;
 import com.cydeo.enums.AccountType;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.lang.ref.PhantomReference;
 import java.math.BigDecimal;
