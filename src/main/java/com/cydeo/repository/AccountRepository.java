@@ -1,6 +1,5 @@
 package com.cydeo.repository;
 
-import com.cydeo.exceptions.BadRequestException;
 import com.cydeo.exceptions.RecordNotFoundException;
 import com.cydeo.model.Account;
 import org.springframework.stereotype.Component;
