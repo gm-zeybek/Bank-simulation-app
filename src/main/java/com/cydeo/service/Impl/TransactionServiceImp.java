@@ -4,11 +4,13 @@ import com.cydeo.enums.AccountType;
 import com.cydeo.exceptions.AccountOwnerShipException;
 import com.cydeo.exceptions.BadRequestException;
 import com.cydeo.exceptions.BalanceNotSufficientException;
+import com.cydeo.exceptions.UnderConstructionException;
 import com.cydeo.model.Account;
 import com.cydeo.model.Transaction;
 import com.cydeo.repository.AccountRepository;
 import com.cydeo.repository.TransactionRepository;
 import com.cydeo.service.TransactionService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -18,6 +20,8 @@ import java.util.UUID;
 
 @Component
 public class TransactionServiceImp implements TransactionService {
+    @Value("${under_construction}")
+    private  boolean underConstruction;
     private final AccountRepository accountRepository; // use a habit for new dependency injection always be private final
 
     private final TransactionRepository transactionRepository;
@@ -27,26 +31,31 @@ public class TransactionServiceImp implements TransactionService {
     }
 
     @Override
-    public Transaction makeTransfer(Account sender, Account receiver, BigDecimal amount, Date creationDate, String message) {
+    public Transaction makeTransfer(Account sender, Account receiver, BigDecimal amount, Date creationDate, String message) throws UnderConstructionException {
         /*
 
             -if sender or receiver is null ?
             -if sender and receiver is the same account ?
             -if sender has enough balance to make transfer
             -if both accounts are checking, if not, one of them saving, it needs to be same userId
+            -if service is not under construction
         */
 
-        validateAccount(amount, sender,receiver);
+        if (!underConstruction) {
+            validateAccount(amount, sender, receiver);
 
-        // after validation is done and money is transferred to the receiver account
-        // we need to create the transaction object and save and return to database
+            // after validation is done and money is transferred to the receiver account
+            // we need to create the transaction object and save and return to database
 
-        Transaction transaction = Transaction.builder().amount(amount).sender(sender.getId())
-                .receiver(receiver.getId()).createDate(creationDate).message(message).build();
+            Transaction transaction = Transaction.builder().amount(amount).sender(sender.getId())
+                    .receiver(receiver.getId()).createDate(creationDate).message(message).build();
 
 
-        // save and return the transaction
-        return transactionRepository.save(transaction);
+            // save and return the transaction
+            return transactionRepository.save(transaction);
+        }else {
+            throw new UnderConstructionException("service is under construction please try later");
+        }
     }
 
 
@@ -85,7 +94,7 @@ public class TransactionServiceImp implements TransactionService {
         // throw the AccountOwnershipException
         if((sender.getAccountType().equals(AccountType.SAVING) || receiver.getAccountType().equals(AccountType.SAVING))
                 && !sender.getUserId().equals(receiver.getUserId())){
-                throw new AccountOwnerShipException("Account should be same for transaction to/from saving accoung");
+                throw new AccountOwnerShipException("Account should be same for transaction to/from saving account");
 
         }
 

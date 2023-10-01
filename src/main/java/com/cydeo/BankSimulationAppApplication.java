@@ -23,7 +23,7 @@ public class BankSimulationAppApplication {
         Account receiver = accountService.createAccount(BigDecimal.valueOf(0), new Date(), AccountType.CHECKING, 2L);
 
 //        System.out.println(accountService.listAllAccount());
-//        transactionService.makeTransfer(sender, receiver, BigDecimal.valueOf(20), new Date(), "rent");
+        transactionService.makeTransfer(sender, receiver, BigDecimal.valueOf(20), new Date(), "rent");
 //        System.out.println(accountService.listAllAccount());
 
 
