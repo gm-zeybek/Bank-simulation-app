@@ -14,4 +14,6 @@ public interface AccountService {
     Account createAccount(BigDecimal balance, Date createDate, AccountType accountType, Long userId);
     List<Account> listAllAccount();
     void deleteAccount(UUID accountId);
+
+    void activateAccount(UUID id);
 }

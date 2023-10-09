@@ -1,5 +1,6 @@
 package com.cydeo.controller;
 
+import com.cydeo.enums.AccountStatus;
 import com.cydeo.enums.AccountType;
 import com.cydeo.model.Account;
 import com.cydeo.service.AccountService;
@@ -55,9 +56,17 @@ public class AccountController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteAccount(@PathVariable("id") UUID id){
+    public String deleteAccount(@PathVariable("id") UUID id, Model model){
         System.out.println(id);
         accountService.deleteAccount(id);
+
+        return "redirect:/index";
+    }
+    @GetMapping("/activate/{id}")
+    public String activateAccount(@PathVariable("id") UUID id){
+        System.out.println(id);
+        accountService.activateAccount(id);
+
         return "redirect:/index";
     }
 }
