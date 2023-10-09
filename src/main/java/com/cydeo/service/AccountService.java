@@ -7,9 +7,11 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public interface AccountService {
     Account createAccount(BigDecimal balance, Date createDate, AccountType accountType, Long userId);
     List<Account> listAllAccount();
+    void deleteAccount(UUID accountId);
 }
