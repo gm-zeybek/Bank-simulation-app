@@ -16,4 +16,7 @@ public class TransactionRepository {
         return transaction;
     }
 
+    public List<Transaction> getAllTransactions() {
+        return transactionList;
+    }
 }

@@ -14,4 +14,9 @@ public interface TransactionService {
     Transaction makeTransfer(Account sender, Account receiver, BigDecimal amount, Date creationDate, String message) throws UnderConstructionException;
 
     List<Transaction> findAllTransaction();
+
+    List<Transaction> lastTenTransaction();
+
+    void saveTransaction(Transaction transaction);
+
 }

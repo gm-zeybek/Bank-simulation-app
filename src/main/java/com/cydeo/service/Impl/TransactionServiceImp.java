@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class TransactionServiceImp implements TransactionService {
@@ -126,6 +128,19 @@ public class TransactionServiceImp implements TransactionService {
 
     @Override
     public List<Transaction> findAllTransaction() {
-        return null;
+        return transactionRepository.getAllTransactions();
+    }
+
+    @Override
+    public List<Transaction> lastTenTransaction() {
+        return findAllTransaction().stream().sorted(Comparator.comparing(Transaction::getCreateDate).reversed()).limit(10).collect(Collectors.toList());
+    }
+
+    @Override
+    public void saveTransaction(Transaction transaction) {
+        if(transaction.getCreateDate()==null){
+            transaction.setCreateDate(new Date());
+        }
+        transactionRepository.save(transaction);
     }
 }

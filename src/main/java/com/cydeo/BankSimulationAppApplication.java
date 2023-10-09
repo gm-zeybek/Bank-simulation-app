@@ -24,6 +24,7 @@ public class BankSimulationAppApplication {
 
 //        System.out.println(accountService.listAllAccount());
 //        transactionService.makeTransfer(sender, receiver, BigDecimal.valueOf(20), new Date(), "rent");
+//        transactionService.makeTransfer()
 //        System.out.println(accountService.listAllAccount());
 
 
