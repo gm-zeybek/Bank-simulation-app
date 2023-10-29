@@ -143,4 +143,9 @@ public class TransactionServiceImp implements TransactionService {
         }
         transactionRepository.save(transaction);
     }
+
+    @Override
+    public List<Transaction> findTransactionsById(UUID accountId) {
+        return transactionRepository.findTransactionsByAccountId(accountId);
+    }
 }
