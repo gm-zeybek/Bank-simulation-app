@@ -37,7 +37,7 @@ public class AccountController {
     public String createAccount(Model model) {
 
         // we need to provide empty account object
-        model.addAttribute("account", AccountDTO.builder().build());
+        model.addAttribute("account", new AccountDTO());
         // we need to provide account type enums object
         model.addAttribute("accountTypes", AccountType.values());
 
