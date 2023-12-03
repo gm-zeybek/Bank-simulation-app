@@ -4,9 +4,11 @@ import com.cydeo.enums.AccountType;
 import com.cydeo.dto.AccountDTO;
 import com.cydeo.service.AccountService;
 import com.cydeo.service.TransactionService;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -27,6 +29,11 @@ public class BankSimulationAppApplication {
 //        System.out.println(accountService.listAllAccount());
 
 
+    }
+
+    @Bean
+    public ModelMapper getModelMapper(){
+        return new ModelMapper();
     }
 
 }
