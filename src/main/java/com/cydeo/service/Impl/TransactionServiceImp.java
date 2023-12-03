@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -49,8 +48,7 @@ public class TransactionServiceImp implements TransactionService {
             // after validation is done and money is transferred to the receiver account
             // we need to create the transaction object and save and return to database
 
-            TransactionDTO transactionDTO = TransactionDTO.builder().amount(amount).sender(sender.getId())
-                    .receiver(receiver.getId()).createDate(creationDate).message(message).build();
+            TransactionDTO transactionDTO = new TransactionDTO();
 
 
             // save and return the transaction
@@ -102,7 +100,7 @@ public class TransactionServiceImp implements TransactionService {
 
     }
 
-    private void findAccountById(UUID id) {
+    private void findAccountById(Long id) {
         // findByid method should be common for database if certain account id exist in database
         accountRepository.findById(id);
     }
@@ -145,7 +143,7 @@ public class TransactionServiceImp implements TransactionService {
     }
 
     @Override
-    public List<TransactionDTO> findTransactionsById(UUID accountId) {
+    public List<TransactionDTO> findTransactionsById(Long accountId) {
         return transactionRepository.findTransactionsByAccountId(accountId);
     }
 }

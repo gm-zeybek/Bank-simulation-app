@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public interface TransactionService {
@@ -20,5 +19,5 @@ public interface TransactionService {
 
     void saveTransaction(TransactionDTO transactionDTO);
 
-    List<TransactionDTO> findTransactionsById(UUID accountId);
+    List<TransactionDTO> findTransactionsById(Long accountId);
 }

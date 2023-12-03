@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.util.Date;
-import java.util.UUID;
 
 
 @Controller
@@ -67,7 +66,7 @@ public class TransactionController {
         return "redirect:/make-transfer";
     }
     @GetMapping("/transaction/{accountId}")
-    public String getTransaction(@PathVariable("accountId")UUID accountId, Model model){
+    public String getTransaction(@PathVariable("accountId") Long accountId, Model model){
         System.out.println(accountId);
         model.addAttribute("transactions", transactionService.findTransactionsById(accountId));
         return "/transaction/transactions";

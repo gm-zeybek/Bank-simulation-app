@@ -7,15 +7,14 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public interface AccountService {
     AccountDTO createAccount(BigDecimal balance, Date createDate, AccountType accountType, Long userId);
     List<AccountDTO> listAllAccount();
-    void deleteAccount(UUID accountId);
+    void deleteAccount(Long accountId);
 
-    void activateAccount(UUID id);
+    void activateAccount(Long id);
 
-    AccountDTO retrieveAccountById(UUID sender);
+    AccountDTO retrieveAccountById(Long sender);
 }
