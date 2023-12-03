@@ -1,7 +1,6 @@
 package com.cydeo.controller;
 
-import com.cydeo.model.Account;
-import com.cydeo.model.Transaction;
+import com.cydeo.dto.TransactionDTO;
 import com.cydeo.service.AccountService;
 import com.cydeo.service.TransactionService;
 import org.springframework.stereotype.Controller;
@@ -13,9 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -34,7 +30,7 @@ public class TransactionController {
     @GetMapping("/make-transfer")
     public String makeTransfer(Model model){
         // empty transaction object
-        model.addAttribute("transaction", Transaction.builder().build());
+        model.addAttribute("transaction", TransactionDTO.builder().build());
         // list of account;
         model.addAttribute("accounts",accountService.listAllAccount());
         // list of last 10 transaction
@@ -42,7 +38,7 @@ public class TransactionController {
         return "/transaction/make-transfer";
     }
     @PostMapping("/make-transfer")
-    public String insertTransfer(@ModelAttribute("transaction") @Valid Transaction transaction, BindingResult bindingResult, Model model){
+    public String insertTransfer(@ModelAttribute("transaction") @Valid TransactionDTO transactionDTO, BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
             model.addAttribute("accounts",accountService.listAllAccount());
             // list of last 10 transaction
@@ -51,18 +47,18 @@ public class TransactionController {
         }
         // empty transaction object
         model.addAttribute("transaction",
-                Transaction.builder().sender(transaction.getSender())
-                        .receiver(transaction.getReceiver())
-                        .amount(transaction.getAmount())
-                        .createDate(transaction.getCreateDate())
-                        .message(transaction.getMessage())
+                TransactionDTO.builder().sender(transactionDTO.getSender())
+                        .receiver(transactionDTO.getReceiver())
+                        .amount(transactionDTO.getAmount())
+                        .createDate(transactionDTO.getCreateDate())
+                        .message(transactionDTO.getMessage())
                         .build());
 //        Account sender = accountService.retrieveAccountById(transaction.getSender());
 //        Account receiver = accountService.retrieveAccountById(transaction.getReceiver());
 //        model.addAttribute("transaction",transactionService.makeTransfer(sender,receiver,transaction.getAmount(),new Date(),transaction.getMessage()));
         // list of acount;
         model.addAttribute("accounts",accountService.listAllAccount());
-        transactionService.saveTransaction(transaction);
+        transactionService.saveTransaction(transactionDTO);
         // list of last 10 transaction
         model.addAttribute("transactions", transactionService.lastTenTransaction());
 

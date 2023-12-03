@@ -1,8 +1,8 @@
 package com.cydeo.service.Impl;
 
+import com.cydeo.dto.AccountDTO;
 import com.cydeo.enums.AccountStatus;
 import com.cydeo.enums.AccountType;
-import com.cydeo.model.Account;
 import com.cydeo.repository.AccountRepository;
 import com.cydeo.service.AccountService;
 import org.springframework.stereotype.Component;
@@ -20,35 +20,35 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account createAccount(BigDecimal balance, Date createDate, AccountType accountType, Long userId) {
+    public AccountDTO createAccount(BigDecimal balance, Date createDate, AccountType accountType, Long userId) {
         // we need to create an object
-        Account account = Account.builder().id(UUID.randomUUID()).balance(balance).creationDate(createDate)
+        AccountDTO accountDTO = AccountDTO.builder().id(UUID.randomUUID()).balance(balance).creationDate(createDate)
                 .accountType(accountType).userId(userId)
                 .accountStatus(AccountStatus.ACTIVE).build();// accountStatus is active as default when created
         // saving and returning that account
-        return accountRepository.saveAccount(account);
+        return accountRepository.saveAccount(accountDTO);
     }
 
     @Override
-    public List<Account> listAllAccount() {
+    public List<AccountDTO> listAllAccount() {
         return accountRepository.findAll();
     }
 
 
     @Override
     public void deleteAccount(UUID accountId) {
-        Account account = accountRepository.findById(accountId);
-        account.setAccountStatus(AccountStatus.DELETED);
+        AccountDTO accountDTO = accountRepository.findById(accountId);
+        accountDTO.setAccountStatus(AccountStatus.DELETED);
     }
 
     @Override
     public void activateAccount(UUID id) {
-        Account account = accountRepository.findById(id);
-        account.setAccountStatus(AccountStatus.ACTIVE);
+        AccountDTO accountDTO = accountRepository.findById(id);
+        accountDTO.setAccountStatus(AccountStatus.ACTIVE);
     }
 
     @Override
-    public Account retrieveAccountById(UUID id) {
+    public AccountDTO retrieveAccountById(UUID id) {
         return accountRepository.findById(id);
     }
 }

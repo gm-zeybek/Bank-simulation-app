@@ -1,7 +1,7 @@
 package com.cydeo.repository;
 
+import com.cydeo.dto.AccountDTO;
 import com.cydeo.exceptions.RecordNotFoundException;
-import com.cydeo.model.Account;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,20 +10,20 @@ import java.util.UUID;
 
 @Component
 public class AccountRepository {
-   public static List<Account> accountList = new ArrayList<>();
+   public static List<AccountDTO> accountDTOList = new ArrayList<>();
 
-    public Account saveAccount(Account account){
-        accountList.add(account);
-        return account;
+    public AccountDTO saveAccount(AccountDTO accountDTO){
+        accountDTOList.add(accountDTO);
+        return accountDTO;
     }
 
-    public List<Account> findAll() {
-       return accountList;
+    public List<AccountDTO> findAll() {
+       return accountDTOList;
     }
 
-    public Account findById(UUID id) {// responsibility of this method finds the id if exist in database otherwise throw an exception
+    public AccountDTO findById(UUID id) {// responsibility of this method finds the id if exist in database otherwise throw an exception
        //write a method that find an id inside the list if not throw RecordNotFountException
-            return accountList.stream().filter(account -> account.getId().equals(id)).findFirst()
+            return accountDTOList.stream().filter(account -> account.getId().equals(id)).findFirst()
                     .orElseThrow(() ->new RecordNotFoundException("Account does not have in the databasse"));
 
     }

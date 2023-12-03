@@ -1,6 +1,6 @@
 package com.cydeo.repository;
 
-import com.cydeo.model.Transaction;
+import com.cydeo.dto.TransactionDTO;
 import org.springframework.stereotype.Component;
 
 
@@ -12,21 +12,21 @@ import java.util.stream.Collectors;
 @Component
 public class TransactionRepository {
 
-    List<Transaction> transactionList = new ArrayList<>();
+    List<TransactionDTO> transactionDTOList = new ArrayList<>();
 
-    public Transaction save(Transaction transaction){
-        transactionList.add(transaction);
-        return transaction;
+    public TransactionDTO save(TransactionDTO transactionDTO){
+        transactionDTOList.add(transactionDTO);
+        return transactionDTO;
     }
 
-    public List<Transaction> getAllTransactions() {
-        return transactionList;
+    public List<TransactionDTO> getAllTransactions() {
+        return transactionDTOList;
     }
 
-    public List<Transaction> findTransactionsByAccountId(UUID accountId) {
+    public List<TransactionDTO> findTransactionsByAccountId(UUID accountId) {
         // if account id is used as a sender or receiver return those transactions
-        return transactionList.stream()
-                .filter(transaction -> transaction.getSender().equals(accountId) || transaction.getReceiver().equals(accountId))
+        return transactionDTOList.stream()
+                .filter(transactionDTO -> transactionDTO.getSender().equals(accountId) || transactionDTO.getReceiver().equals(accountId))
                 .collect(Collectors.toList());
     }
 }

@@ -1,8 +1,8 @@
 package com.cydeo.service;
 
+import com.cydeo.dto.AccountDTO;
+import com.cydeo.dto.TransactionDTO;
 import com.cydeo.exceptions.UnderConstructionException;
-import com.cydeo.model.Account;
-import com.cydeo.model.Transaction;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -12,13 +12,13 @@ import java.util.UUID;
 
 @Component
 public interface TransactionService {
-    Transaction makeTransfer(Account sender, Account receiver, BigDecimal amount, Date creationDate, String message) throws UnderConstructionException;
+    TransactionDTO makeTransfer(AccountDTO sender, AccountDTO receiver, BigDecimal amount, Date creationDate, String message) throws UnderConstructionException;
 
-    List<Transaction> findAllTransaction();
+    List<TransactionDTO> findAllTransaction();
 
-    List<Transaction> lastTenTransaction();
+    List<TransactionDTO> lastTenTransaction();
 
-    void saveTransaction(Transaction transaction);
+    void saveTransaction(TransactionDTO transactionDTO);
 
-    List<Transaction> findTransactionsById(UUID accountId);
+    List<TransactionDTO> findTransactionsById(UUID accountId);
 }
