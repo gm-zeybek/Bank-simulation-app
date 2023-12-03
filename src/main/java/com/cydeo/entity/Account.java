@@ -1,4 +1,4 @@
-package com.cydeo.repository.entity;
+package com.cydeo.entity;
 
 import com.cydeo.enums.AccountStatus;
 import com.cydeo.enums.AccountType;
