@@ -4,6 +4,7 @@ import com.cydeo.dto.AccountDTO;
 import com.cydeo.dto.TransactionDTO;
 import com.cydeo.service.AccountService;
 import com.cydeo.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.validation.Valid;
 import java.util.Date;
 
 
@@ -31,9 +31,9 @@ public class TransactionController {
     @GetMapping("/make-transfer")
     public String makeTransfer(Model model){
         // empty transaction object
-        model.addAttribute("transaction", new TransactionDTO());
+        model.addAttribute("transactionDTO", new TransactionDTO());
         // list of account;
-        model.addAttribute("accounts",accountService.listAllAccount());
+        model.addAttribute("accounts",accountService.listAllActiveAccounts());
         // list of last 10 transaction
         model.addAttribute("transactions", transactionService.lastTenTransaction());
         return "/transaction/make-transfer";
@@ -46,22 +46,9 @@ public class TransactionController {
             model.addAttribute("transactions", transactionService.lastTenTransaction());
             return "/transaction/make-transfer";
         }
-        // empty transaction object
-//        model.addAttribute("transaction",
-//                TransactionDTO.builder().sender(transactionDTO.getSender())
-//                        .receiver(transactionDTO.getReceiver())
-//                        .amount(transactionDTO.getAmount())
-//                        .createDate(transactionDTO.getCreateDate())
-//                        .message(transactionDTO.getMessage())
-//                        .build());
         AccountDTO sender = accountService.retrieveAccountById(transactionDTO.getSender().getId());
         AccountDTO receiver = accountService.retrieveAccountById(transactionDTO.getReceiver().getId());
-        model.addAttribute("transaction",transactionService.makeTransfer(sender,receiver,transactionDTO.getAmount(),new Date(),transactionDTO.getMessage()));
-        // list of acount;
-//        model.addAttribute("accounts",accountService.listAllAccount());
-//        transactionService.saveTransaction(transactionDTO);
-//        // list of last 10 transaction
-//        model.addAttribute("transactions", transactionService.lastTenTransaction());
+        model.addAttribute("transactionDTO",transactionService.makeTransfer(sender,receiver,transactionDTO.getAmount(),new Date(),transactionDTO.getMessage()));
 
         return "redirect:/make-transfer";
     }

@@ -4,6 +4,7 @@ import com.cydeo.enums.AccountType;
 import com.cydeo.dto.AccountDTO;
 import com.cydeo.service.AccountService;
 
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,8 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.validation.Valid;
-import java.util.Date;
+
 
 @Controller
 public class AccountController {
@@ -36,7 +36,7 @@ public class AccountController {
     public String createAccount(Model model) {
 
         // we need to provide empty account object
-        model.addAttribute("account", new AccountDTO());
+        model.addAttribute("accountDTO", new AccountDTO());
         // we need to provide account type enums object
         model.addAttribute("accountTypes", AccountType.values());
 
@@ -53,7 +53,7 @@ public class AccountController {
         // print out account information
         // create new Account method populating information using the data captured from ui
         // return index page
-        accountService.createAccount(accountDTO.getBalance(), new Date(), accountDTO.getAccountType(), accountDTO.getUserId());
+        accountService.createNewAccount(accountDTO);
 //        System.out.println(account);
 
 

@@ -2,11 +2,11 @@ package com.cydeo.entity;
 
 import com.cydeo.enums.AccountStatus;
 import com.cydeo.enums.AccountType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 

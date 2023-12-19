@@ -36,7 +36,7 @@
           <tbody>
           <tr th:each="accountDTO : ${accountList}">
             <td th:text="${accountDTO.userId}" ></td>
-            <td th:text="${accountDTO.accountStatus}"></td>
+            <td th:text="${accountDTO.accountStatus.value()}"></td>
             <td th:text="${accountDTO.balance}" ></td>
             <td th:text="${accountDTO.accountType}" ></td>
             <td th:text="${accountDTO.creationDate}" ></td>
@@ -48,7 +48,7 @@
 
 
 
-            <td><a class="btn btn-success" th:href="@{/transactionDTO/{accountId}(accountId=${accountDTO.id})}">Account Transaction</a></td>
+            <td><a class="btn btn-success" th:href="@{/transaction/{accountId}(accountId=${accountDTO.id})}">Account Transaction</a></td>
           </tr>
           </tbody>
         </table>

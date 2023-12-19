@@ -1,27 +1,25 @@
 package com.cydeo.repository;
 
+import com.cydeo.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @Repository // optional
-public interface TransactionRepository extends JpaRepository {
+public interface TransactionRepository extends JpaRepository<Transaction,Long> {
+    @Query(value = "SELECT * FROM transactions ORDER BY create_date DESC LIMIT 10", nativeQuery = true)
+    public List<Transaction> lastTenTransaction();
 
-//    List<TransactionDTO> transactionDTOList = new ArrayList<>();
-//
-//    public TransactionDTO save(TransactionDTO transactionDTO){
-//        transactionDTOList.add(transactionDTO);
-//        return transactionDTO;
-//    }
-//
-//    public List<TransactionDTO> getAllTransactions() {
-//        return transactionDTOList;
-//    }
-//
-//    public List<TransactionDTO> findTransactionsByAccountId(Long accountId) {
-//        // if account id is used as a sender or receiver return those transactions
-//        return transactionDTOList.stream()
-//                .filter(transactionDTO -> transactionDTO.getSender().equals(accountId) || transactionDTO.getReceiver().equals(accountId))
-//                .collect(Collectors.toList());
-//    }
+    // we are looking for sender or receiver transactions
+    @Query("SELECT t FROM Transaction t WHERE t.sender.id = ?1 OR t.receiver.id = ?1")
+    public List<Transaction> findTransactionsByAccountId(Long id);
+
+
+    @Query("SELECT t FROM Transaction t")
+    public List<Transaction> findAllTransaction();
+
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountMapper {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public AccountMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;

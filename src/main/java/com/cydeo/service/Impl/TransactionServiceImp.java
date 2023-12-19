@@ -7,28 +7,37 @@ import com.cydeo.exceptions.AccountOwnerShipException;
 import com.cydeo.exceptions.BadRequestException;
 import com.cydeo.exceptions.BalanceNotSufficientException;
 import com.cydeo.exceptions.UnderConstructionException;
-import com.cydeo.repository.AccountRepository;
+import com.cydeo.mapper.AccountMapper;
+import com.cydeo.mapper.TransactionMapper;
 import com.cydeo.repository.TransactionRepository;
+import com.cydeo.service.AccountService;
 import com.cydeo.service.TransactionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.stream;
+
+@SuppressWarnings("unchecked")
 @Component
 public class TransactionServiceImp implements TransactionService {
     @Value("${under_construction}")
     private  boolean underConstruction;
-    private final AccountRepository accountRepository; // use a habit for new dependency injection always be private final
+    private final AccountService accountService; // use a habit for new dependency injection always be private final
 
     private final TransactionRepository transactionRepository;
-    public TransactionServiceImp(AccountRepository accountRepository, TransactionRepository transactionRepository) {
-        this.accountRepository = accountRepository;
+    private final TransactionMapper transactionMapper;
+
+
+    public TransactionServiceImp(AccountService accountService, TransactionRepository transactionRepository, TransactionMapper transactionMapper) {
+        this.accountService = accountService;
         this.transactionRepository = transactionRepository;
+        this.transactionMapper = transactionMapper;
     }
 
     @Override
@@ -48,11 +57,12 @@ public class TransactionServiceImp implements TransactionService {
             // after validation is done and money is transferred to the receiver account
             // we need to create the transaction object and save and return to database
 
-            TransactionDTO transactionDTO = new TransactionDTO();
+            TransactionDTO transactionDTO = new TransactionDTO(sender,receiver,amount,message,creationDate);
 
 
             // save and return the transaction
-            return transactionRepository.save(transactionDTO);
+             transactionRepository.save(transactionMapper.convertToEntity(transactionDTO));
+             return transactionDTO;
         }else {
             throw new UnderConstructionException("service is under construction please try later");
         }
@@ -102,7 +112,7 @@ public class TransactionServiceImp implements TransactionService {
 
     private void findAccountById(Long id) {
         // findByid method should be common for database if certain account id exist in database
-        accountRepository.findById(id);
+        accountService.retrieveAccountById(id);
     }
 
     private void executeBalanceAndUpdateIfRequired(BigDecimal amount, AccountDTO sender, AccountDTO receiver){
@@ -116,6 +126,13 @@ public class TransactionServiceImp implements TransactionService {
         } else {
             throw new BalanceNotSufficientException("Balance is not sufficient to make this transfer");
         }
+        AccountDTO senderAcc = accountService.retrieveAccountById(sender.getId());
+        AccountDTO receiverAcc = accountService.retrieveAccountById(receiver.getId());
+        senderAcc.setBalance(sender.getBalance());
+        receiverAcc.setBalance(receiver.getBalance());
+        accountService.updateAccount(senderAcc);
+        accountService.updateAccount(receiverAcc);
+
     }
 
     private boolean checkSenderBalance(AccountDTO sender, BigDecimal amount) {
@@ -124,14 +141,18 @@ public class TransactionServiceImp implements TransactionService {
         return sender.getBalance().subtract(amount).compareTo(BigDecimal.ZERO) >=0;
     }
 
-    @Override
-    public List<TransactionDTO> findAllTransaction() {
-        return transactionRepository.getAllTransactions();
+     public List<TransactionDTO> findAllTransaction() {
+        return  transactionRepository.findAllTransaction().stream()
+                .map(transactionMapper::convertDTO)
+                .collect(Collectors.toList());
+
     }
 
     @Override
     public List<TransactionDTO> lastTenTransaction() {
-        return findAllTransaction().stream().sorted(Comparator.comparing(TransactionDTO::getCreateDate).reversed()).limit(10).collect(Collectors.toList());
+        return transactionRepository.lastTenTransaction().stream()
+                .map(transactionMapper::convertDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -139,11 +160,14 @@ public class TransactionServiceImp implements TransactionService {
         if(transactionDTO.getCreateDate()==null){
             transactionDTO.setCreateDate(new Date());
         }
-        transactionRepository.save(transactionDTO);
+
+        transactionRepository.save(transactionMapper.convertToEntity(transactionDTO));
     }
 
     @Override
     public List<TransactionDTO> findTransactionsById(Long accountId) {
-        return transactionRepository.findTransactionsByAccountId(accountId);
+        return transactionRepository.findTransactionsByAccountId(accountId)
+                .stream().map(transactionMapper::convertDTO)
+                .collect(Collectors.toList());
     }
 }
