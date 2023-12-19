@@ -1,0 +1,10 @@
+Bank Simulation Security
+    -Add dependancy
+    -Add LoginController
+    -Add Login html
+    -Add User and Role Entity
+    -Add data.sql
+    -Update application.properties
+
+ Task:
+ Create a class to convert our User to UserDetails for Security
